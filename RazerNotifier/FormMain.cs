@@ -129,6 +129,7 @@ namespace RazerNotifier
             WindowState = FormWindowState.Minimized;
             CheckTimer.Interval = milliseconds;
             CheckTimer.Enabled = true;
+            CheckTimer_Tick(null, null);
         }
 
         /// <summary>
@@ -145,12 +146,14 @@ namespace RazerNotifier
                     var json = webClient.DownloadString("http://www.razerzone.com/" + _selectedCountry + "store/dr_json/" + _productId);
                     var productList = JsonConvert.DeserializeObject<RazerProductInfoList>(json);
                     int quantity;
-                    if (int.TryParse(productList.productInfo.product.availableQuantity, out quantity))
+                    if (int.TryParse(productList.productInfo.product.availableQuantity, out quantity) && quantity > 0)
                     {
                         _icon.BalloonTipTitle = "In stock!";
                         _icon.BalloonTipIcon = ToolTipIcon.Info;
                         _icon.BalloonTipText = productList.productInfo.product.displayName +
-                                              " is in stock. Click to buy.";
+                                               " is in stock with a quantity of " +
+                                               quantity + ".\n\n"+
+                                               "Click to buy.";
                         _buyLink = productList.productInfo.product.buyLink;
                         _icon.ShowBalloonTip(10000);
                     }
