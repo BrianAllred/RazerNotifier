@@ -173,7 +173,15 @@ namespace RazerNotifier
             {
                 _icon.BalloonTipTitle = "Error!";
                 _icon.BalloonTipIcon = ToolTipIcon.Error;
-                _icon.BalloonTipText = "Error retrieving product " + _productId + " from Razer store " + _selectedCountry + ".";
+                if (string.IsNullOrWhiteSpace(_selectedCountry))
+                {
+                    _icon.BalloonTipText = "Error retrieving product " + _productId + " from Razer store " +
+                                           _selectedCountry + ".";
+                }
+                else
+                {
+                    _icon.BalloonTipText = "Error retrieving product " + _productId + " from Razer store.";
+                }
                 _icon.ShowBalloonTip(10000);
             }
         }
@@ -185,7 +193,14 @@ namespace RazerNotifier
         /// <param name="e"></param>
         private void BallonClicked(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo(_buyLink));
+            try
+            {
+                Process.Start(new ProcessStartInfo(_buyLink));
+            }
+            catch (Exception)
+            {
+                
+            }
         }
 
         /// <summary>
